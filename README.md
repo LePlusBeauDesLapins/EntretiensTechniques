@@ -587,7 +587,17 @@ if (foo === undefined) {
 * Quelle est l'utilisation typique d'une fonction anonyme ?
 * Comment organisez-vous votre code ? (pattern modulaire, héritage classique ?)
 * Quelle est la différence entre des objets hôtes et des objets natifs ?
+
+>Les objets hôtes sont fournis par l'environnement hôte (le navigateur par exemple) : `window`, `document`, `location`, `history`, `XMLHttpRequest`, `setTimeout`, `getElementsByTagName`, `querySelectorAll`...
+
 * Différence entre: `function Person() {}`, `var person = Person()` et `var person = new Person()` ?
+
+>`function Person() {}` : déclaration d'une fonction `Person`.
+>
+>`var person = Person()` : stockage du résultat de l'exécution de la fonction `Person` dans une variable `person`.
+>
+>`var person = new Person()` : crée un objet `person`.
+
 * Quelle est la différence entre `.call` et `.apply` ?
 
 >The difference is that `.apply` lets you invoke the function with arguments as an array; `.call` requires the parameters be listed explicitly. A useful mnemonic is "A for array and C for comma".
@@ -600,18 +610,71 @@ if (foo === undefined) {
 * Pouvez-vous expliquer comment fonctionne l'héritage en Javascript ?
 * Quand utiliseriez-vous `document.write()` ?
 * Quelle est la différence entre détection de "feature", inférence de "feature" et l'utilisation du "User-Agent" ?
+
+>Feature detection checks a feature for existence :
+
+```javascript
+if (window.XMLHttpRequest) {
+  new XMLHttpRequest();
+}
+```
+
+>Feature inference checks for a feature just like feature detection, but uses another function because it assumes it will also exist :
+
+```javascript
+if (document.getElementsByTagName) {
+    element = document.getElementById(id);
+}
+```
+
+>Checking the UA string is an old practice and should not be used anymore. You keep changing the UA checks and never benefit from newly implemented features :
+
+```javascript
+if (navigator.userAgent.indexOf("MSIE 7") > -1){
+    //do something
+}
+```
+
 * Expliquez ce qu'est AJAX avec autant de détails que possible.
+
+>Asynchronous Javascript And XML : permet de construire des applications Web et des sites web dynamiques interactifs sur le poste client en se servant de Javascript, CSS, JSON, XML, le DOM, XMLHttpRequest...
+>
+>En utilisant Ajax, le dialogue entre le navigateur et le serveur se déroule la plupart du temps de la manière suivante : un programme écrit en langage de programmation JavaScript, incorporé dans une page web, est exécuté par le navigateur.
+>Celui-ci envoie en arrière-plan des demandes au serveur Web, puis modifie le contenu de la page actuellement affichée par le navigateur Web en fonction du résultat reçu du serveur, évitant ainsi la transmission et l'affichage d'une nouvelle page complète.
+
 * Expliquez comment fonctionne JSONP (et pourquoi ce n'est pas réellement de l'AJAX).
 * Avez-vous déjà utilisé des "templates" en Javascript ?
   * Si oui, quelles librairies avez-vous utilisées ?
 * Expliquez le phénomène de "hoisting".
 * Décrivez le "event bubbling".
+
+>Event bubbling and capturing are two ways of event propagation in the HTML DOM API, when an event occurs in an element inside another element, and both elements have registered a handle for that event.
+>The event propagation mode determines in which order the elements receive the event.
+>
+>With bubbling, the event is first captured and handled by the innermost element and then propagated to outer elements.
+>
+>With capturing, the event is first captured by the outermost element and propagated to the inner elements.
+
 * Quelle est la différence entre un "attribut" et une "propriété" ?
+
+>Un attribut est une string définie par HTML, une propriété peut être n'importe quel type et est définie par le DOM (ex : propriété `checked` renvoie l'état actuel de la checkbox, différente de l'attribut `checked`, qui renvoie la valeur par défaut de la checkbox).
+
 * Pourquoi étendre des objets natifs de Javascript n'est-il pas une bonne idée ?
 * Pourquoi étendre des objets natifs est-il une bonne idée ?
 * Quelle est la différence entre les évènements "document load" et "document ready" ?
 * Quelle est la différence entre `==` et `===` ?
+
+>L'opérateur `==` effectue une conversion implicite avant de faire le test d'égalité.
+>Voir [Utiliser les différents tests d'égalité](https://developer.mozilla.org/fr/docs/Web/JavaScript/Les_diff%C3%A9rents_tests_d_%C3%A9galit%C3%A9).
+
 * Expliquez la politique d'origine commune (same-origin policy) et ses implications en JavaScript.
+
+>La same-origin policy restreint la manière dont un document ou un script chargé depuis une origine peut interagir avec une autre ressource chargée depuis une autre origine.
+>
+>Deux pages ont la même origine si le protocole, le port (si spécifié) et l'hôte sont les mêmes pour les deux pages.
+>
+>Pour interagir avec une autre origine, il faut activer le **CORS**.
+
 * Expliquez les patterns d'héritage en JavaScript.
 * Faites fonctionner ceci :
 
@@ -619,9 +682,28 @@ if (foo === undefined) {
 [1,2,3,4,5].duplicator(); // [1,2,3,4,5,1,2,3,4,5]
 ```
 
+```javascript
+Array.prototype.duplicator = function() {
+  return this.concat(this);
+}
+```
+
 * Qu'est ce que l'opérateur ternaire ? Qu'est-ce que ce mot indique ?
+
+>La structure `(condition) ? exécution_si_vrai : exécution_si_faux;`
+
 * Qu'est-ce que `"use strict";`? Quels sont les avantages et désavantages de son utilisation ?
 * Créez une boucle `for` qui se répète `100` fois et affichez **"fizz"** aux multiples de `3`, `"buzz"` aux multiples de `5` et **"fizzbuzz"** aux multiples de `3` et `5`.
+
+```javascript
+for (let i = 1; i <= 100; i++) {
+  let str = '';
+  if (!(i % 3)) str += 'Fizz';
+  if (!(i % 5)) str += 'Buzz';
+  console.log(str || i);
+}
+```
+
 * Pourquoi il est en général préférable de laissez le 'scope' global d'un site tel quel et ne jamais y toucher ?
 * Pourquoi utiliseriez-vous quelque chose comme l'événement `load` ? Est-ce que cet évènement a des avantages ? Connaissez-vous des alternatives, et pourquoi les utiliseriez-vous ?
 * Expliquez ce qu'est une application mono-page (*Single Page Application*) et comment feriez-vous pour qu'elle soit optimisée pour le référencement (*SEO*).
@@ -642,7 +724,7 @@ if (foo === undefined) {
 
 * Avez-vous expérimenté le Javascript ECMA 6 ?
 * Quelle est la principale différence entre les arrows fonctions et les fonctions anonymes ?
-* Combien il y a t'il de thread en javascript ?
+* Combien y a-t-il de threads en Javascript ?
 
 **[⬆ back to top](#toc)**
 
@@ -653,18 +735,62 @@ if (foo === undefined) {
 ## Questions sur le réseau
 
 * Que signifie HTTP ?
+
+>HyperText Transfer Protocol.
+
 * Expliquez ce qu'est HTTP.
+
+>C'est un protocole de communication client-serveur développé pour le World Wide Web.
+>Il peut fonctionner sur n'importe quelle connexion fiable, dans les faits on utilise le protocole TCP comme couche de transport.
+
 * Pourquoi est-il préférable de disposer ses assets sur des domaines différents ?
 * Faites de votre mieux pour décrire le processus à partir du moment où vous tapez l'URL d'un site internet jusqu'au moment où la page a finit de charger.
 * Quelle est la différence entre "Long-Polling", "Websockets" et les événements "Server-Sent" ?
+
+>
+>
+>Voir [What are Long-Polling, Websockets, Server-Sent Events (SSE) and Comet?](http://stackoverflow.com/questions/11077857/what-are-long-polling-websockets-server-sent-events-sse-and-comet).
+
 * Expliquez les entêtes de requêtes et réponses suivant :
-  * Différences entre `Expires`, `Date`, `Age` et `If-Modified-`...
-  * Do Not Track
-  * `Cache-Control`
-  * `Transfer-Encoding`
-  * `ETag`
-  * `X-Frame-Options`
+  1. Différences entre `Expires`, `Date`, `Age` et `If-Modified-`...
+  1. Do Not Track
+  1. `Cache-Control`
+  1. `Transfer-Encoding`
+  1. `ETag`
+  1. `X-Frame-Options`
+
+>**1.** Expires = indique le moment après lequel la ressource devrait être considérée obsolète<br/>
+>Date = moment auquel le message est généré<br/>
+>Age = estimation de l'âge (par le receveur) de la requête depuis son renvoi par le serveur<br/>
+>If-Modified = date envoyée au serveur, si page n'a pas été modifiée depuis la date donnée, le serveur renvoie 304. Sinon, renvoie 200 et page entière.
+>
+>**2.** Do not track = permet de signaler aux applications web que l'utilisateur ne veut pas être "suivi"
+>
+>**3.** Cache-Control : fixer des durées maximales de rétention, empêcher le stockage des données sur le disque dur, etc...
+>
+>**4.** Transfer-Encoding = Spécifie l'encodage de transfert. La seule valeur définie par la spécification RFC 2616 est chunked
+>
+>**5.** ETag = Un ETag est un identifiant unique opaque assigné par le serveur web à chaque version d'une ressource accessible via une URL. Si la ressource accessible via cette URL change, un nouvel ETag différent du précédent sera assigné. Utilisés ainsi, les ETags sont similaires à des empreintes digitales, et peuvent être rapidement comparés pour vérifier si deux versions sont identiques, et ainsi savoir si une demande peut être honorée par un cache local ou pas.
+>
+>**6.** indique si une ressource est autorisée à être chargée dans un cadre ou un iframe. Si la réponse contient dans cet en-tête une valeur SAMEORIGIN, le navigateur ne chargera la ressource dans un cadre que si la demande provient du même site. Si l’en-tête contient DENY, le navigateur bloque alors le chargement de la ressource dans un cadre quel que soit le site qui en fait la demande.
+>Cela permet d'éviter les détournements de clics.
+
 * Quelles sont les différentes actions (verbes) HTTP ? Listez toutes celles que vous connaissez et expliquez-les.
+
+>OPTIONS : options disponibles associées à une ressource, ou capacités d'un serveur
+>
+>GET : récolte d'informations
+>
+>HEAD : similaire à GET, mais ne retourne pas de contenu (sert par ex à vérifier la validité d'un lien, pinger un serveur, savoir si une ressource a été modifiée...)
+>
+>PUT : sert à créer ou modifier une entité COMPLETE
+>
+>PATCH : sert uniquement pour des mises à jour partielles
+>
+>POST : création COMPLETE lorsque PUT n'est pas dispo ?.. Voir [POST VS. PUT : LA CONFUSION](http://blog.xebia.fr/2014/03/17/post-vs-put-la-confusion/)
+>
+>DELETE : demande au serveur de supprimer une ressource
+
 * Quelle est la principale différence entre HTTP1 et HTTP1.1 ?
 * Quelle est la principale différence entre HTTP1.1 et HTTP2 ?
 * Qu'est ce que le multiplexage et expliquez sont fonctionnement ?

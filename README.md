@@ -82,11 +82,14 @@
 * Si vous aviez 5 feuilles de style différentes, de quelle façon les intégreriez-vous le mieux dans un site ?
 
 >On peut utiliser plusieurs balises `<link>` :
+
 ```html
 <link rel="stylesheet" href="/styles/xxx.css" type="text/css" />
 <link rel="stylesheet" href="/styles/yyy.css" type="text/css" />
 ```
+
 >On peut également utiliser une balise `<style>` et des `@import`, mais le chargement de la page est plus long :
+
 ```html
 <style type="text/css">
   @import url(/styles/xxx.css);
@@ -379,6 +382,9 @@
 * Quelle approche choisiriez-vous pour réparer des bugs au niveau du CSS spécifique à certains navigateurs ?
 * Comment servez-vous vos pages pour les navigateurs aux fonctionnalités réduites ?
   * Quelles techniques/procédés utilisez-vous ?
+
+>Modernizr ?
+
 * Quelles sont les différentes manières de masquer du contenu (en le laissant disponible pour les lecteurs d'écran) ?
 
 >Les solutions sont notées *OUI* ou *NON* en fonction de si elles laissent le contenu disponible pour les lecteurs d'écran.
@@ -425,7 +431,7 @@ transparence totale via opacity:100%; ou RGBA(X,X,X,1);
 
 * Avez-vous déjà utilisé un système de grille, et si oui, lequel préférez-vous ?
 
->Exemple : Bootstrap.
+>Exemple : celui de Bootstrap.
 
 * Avez-vous déjà implémenté des "media queries", ou des "layouts CSS" spécifiques aux mobiles ?
 * Avez-vous déjà touché au style d'un SVG ?
@@ -546,7 +552,7 @@ $('#elem1').on('click', '.elems2', callback);
 >
 >On peut cependant passer le contexte que l'on veut à une fonction avec `call` et `apply`. Attention à bien passer un objet, sinon `ToObject` sera appelé.
 >
->On peut aussi utiliser `bind` pour lier un contexte de façon permanente à une fonction, ou des fonctions fléchées (où `this` aura **toujours** la valeur de l'objet englobant où la fonction est utilisée). 
+>On peut aussi utiliser `bind` pour lier un contexte de façon permanente à une fonction, ou des fonctions fléchées (où `this` aura **toujours** la valeur de l'objet englobant où la fonction est utilisée).
 
 * Expliquez comment fonctionne l'héritage de prototype.
 
@@ -584,6 +590,9 @@ if (foo === undefined) {
 ```
 
 * Qu'est-ce qu'une "closure" et comment/pourquoi en utiliser une ?
+
+>Rendre locale une variable (ex : dans une boucle for où la variable de parcours est définie par var).
+
 * Quelle est l'utilisation typique d'une fonction anonyme ?
 * Comment organisez-vous votre code ? (pattern modulaire, héritage classique ?)
 * Quelle est la différence entre des objets hôtes et des objets natifs ?
@@ -660,6 +669,9 @@ if (navigator.userAgent.indexOf("MSIE 7") > -1){
 >Un attribut est une string définie par HTML, une propriété peut être n'importe quel type et est définie par le DOM (ex : propriété `checked` renvoie l'état actuel de la checkbox, différente de l'attribut `checked`, qui renvoie la valeur par défaut de la checkbox).
 
 * Pourquoi étendre des objets natifs de Javascript n'est-il pas une bonne idée ?
+
+>Parce qu'on redéfinit un type, peut poser des problèmes si on utilise plusieurs librairies (redéfinitions, shadowing...).
+
 * Pourquoi étendre des objets natifs est-il une bonne idée ?
 * Quelle est la différence entre les évènements "document load" et "document ready" ?
 * Quelle est la différence entre `==` et `===` ?
@@ -709,6 +721,9 @@ for (let i = 1; i <= 100; i++) {
 * Expliquez ce qu'est une application mono-page (*Single Page Application*) et comment feriez-vous pour qu'elle soit optimisée pour le référencement (*SEO*).
 * Quelle est l'étendue de votre expérience avec les "Promises" et/ou leurs "polyfills" ?
 * Quels sont les pour et contre de l'utilisation des "Promises" à la place des "callbacks" ?
+
+>Pour : lisibilité du code, prevent le *callback hell*
+
 * Quel est le résultat de :
 
 ```javascript
@@ -723,8 +738,16 @@ for (let i = 1; i <= 100; i++) {
 >Pour `"3"`, on a `parseInt(3, 2)` ce qui n'est pas bon car 3 n'est pas exprimable en base 2.
 
 * Avez-vous expérimenté le Javascript ECMA 6 ?
+
+>Let, const, arrow functions, promise, classes...
+
 * Quelle est la principale différence entre les arrows fonctions et les fonctions anonymes ?
+
+>Le contexte.
+
 * Combien y a-t-il de threads en Javascript ?
+
+>Un seul (même si utilisation d'opérations asynchrones comme les promises ou de l'AJAX).
 
 **[⬆ back to top](#toc)**
 
@@ -744,11 +767,27 @@ for (let i = 1; i <= 100; i++) {
 >Il peut fonctionner sur n'importe quelle connexion fiable, dans les faits on utilise le protocole TCP comme couche de transport.
 
 * Pourquoi est-il préférable de disposer ses assets sur des domaines différents ?
+
+>A cause du HTTP, pour pouvoir télécharger plusieurs assets à la fois (un sur chaque domaine différent).
+
 * Faites de votre mieux pour décrire le processus à partir du moment où vous tapez l'URL d'un site internet jusqu'au moment où la page a finit de charger.
+
+>Conversion URL/IP par serveur DNS (celui du FAI de base, sinon modifiable pour celui de Google, OpenDNS...)
+>
+>Construction requête
+>
+>Ouverture connection TCP
+>
+>Envoi de la requête
+>
+>Traitement de larequête par le serveur
+>
+>Fabrication et envoi de la réponse
+>
+>Réception réponse et traitement (affichage)
+
 * Quelle est la différence entre "Long-Polling", "Websockets" et les événements "Server-Sent" ?
 
->
->
 >Voir [What are Long-Polling, Websockets, Server-Sent Events (SSE) and Comet?](http://stackoverflow.com/questions/11077857/what-are-long-polling-websockets-server-sent-events-sse-and-comet).
 
 * Expliquez les entêtes de requêtes et réponses suivant :

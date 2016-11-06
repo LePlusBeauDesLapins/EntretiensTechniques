@@ -440,24 +440,83 @@ transparence totale via opacity:100%; ou RGBA(X,X,X,1);
 * Quels sont les avantages/désavantages de l'utilisation des préprocesseurs CSS ? (SASS, Compass, Stylus, LESS)
   * Si vous avez un avis, décrivez ce que vous aimez et n'aimez pas des préprocesseurs que vous avez utilisé.
 * Comment implémenteriez-vous un design qui utilise des polices de caractères non standards ?
+
+```CSS
+@font-face {
+  font-family: 'quadranta';
+  src: url('quadranta.eot?') format('eot'),
+    url('quadranta.otf') format('truetype'),
+    url('quadranta.woff') format('woff'),
+    url('quadranta.svg#QuadrantaBold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}	 
+
+h4 {
+  font-family: quadranta, sans-serif;
+  font-size: 3em;
+}
+```
+
 * Expliquez comment un navigateur détermine quels éléments correspondent à un sélecteur CSS.
 * Expliquez ce que vous avez compris du modèle de boite (box model) et comment implémenteriez vous une mise en page avec des modèles de boite différents.
-* Qu'est-ce que ```* { box-sizing: border-box; }``` fait ? Quels sont ses désavantages ?
+
+>- Content : The content of the box, where text and images appear
+>- Padding : Clears an area around the content. The padding is transparent
+>- Border : A border that goes around the padding and content
+>- Margin : Clears an area outside the border. The margin is transparent
+
+* Qu'est-ce que `* { box-sizing: border-box; }` fait ? Quels sont ses désavantages ?
+
+>Sert à spécifier une taille fixe qui prend en compte le padding et les bordures.
+>
+>Ne gère pas les pseudo-éléments + voir [HTML5 Please - Box sizing](http://html5please.com/#box-sizing).
+>Pattern à suivre :
+
+```CSS
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+```
+
 * Listez autant de valeurs que vous pouvez pour la propriété `display`.
 
->inline, block, inline-block, flex, inline-flex, inline-table, list-item, run-in, table, table-cell, table-..., none, initial, inherit
+>`inline, block, inline-block, flex, inline-flex, inline-table, list-item, run-in, table, table-cell, table-..., none, initial, inherit`
 
 * Quelle est la différence entre `inline` et `inline-block` ?
 
 >Un élément `inline-block` est redimensionnable.
 
 * Quelle est la différence entre les éléments ayant `relative`, `fixed`, `absolute` et `static` comme `position` ?
+
+>An element with `position: static;` (default beehavior) is not positioned in any special way. It is always positioned according to the normal flow of the page.
+>
+>An element with `position: relative;` is positioned relative to its normal position. Setting the `top`, `right`, `bottom`, and `left` properties of a relatively-positioned element will cause it to be adjusted away from its normal position. Other content will not be adjusted to fit into any gap left by the element.
+>
+>An element with `position: fixed;` is positioned relative to the viewport, which means it always stays in the same place even if the page is scrolled. The `top`, `right`, `bottom` and `left` properties are used to position the element. A fixed element does not leave a gap in the page where it would normally have been located.
+>
+>An element with `position: absolute;` is positioned relative to the nearest positioned ancestor. However, if an absolute positioned element has no positioned ancestors, it uses the document body, and moves along with page scrolling.
+
 * Le 'C' dans CSS veut dire Cascade (Cascading). Comment la priorité est-elle définie lors de l'assignement de styles (exemples) ? Comment pouvez-vous utiliser ce système à votre avantage ?
 * Quels frameworks CSS avez-vous utilisé localement, ou en production ? Comment feriez-vous pour les changer/améliorer ?
+
+>Bootstrap, Foundation, Materialize CSS, Topcoat, Semantic UI, Concise CSS, UIkit, Pure CSS, Cascade, Gumby, Primer CSS...
+
 * Avez-vous expérimenté le récent `flexbox` ?
 * En quoi le "responsive design" est différent du "adaptive design" ?
+
+>Responsive design = uniquement la mise en page.
+>
+>Design adaptif = amélioration progressive + responsive design.
+
 * Avez-vous déjà travaillé avec des images "retina" ? Si oui, à quel moment et quelles techniques avez-vous utilisées ?
 * Y a-t-il des raisons particulières pour lesquelles vous voudriez utilser `translate()` plutôt que `position: absolute` ou vice-versa ? Et pourquoi ?
+
+>Transform: meilleures performances/plus smooth (accélération GPU), optimisation du rendu, utiliser RequestAnimationFrame si JS, 
 
 **[⬆ back to top](#toc)**
 
@@ -468,14 +527,62 @@ transparence totale via opacity:100%; ou RGBA(X,X,X,1);
 ## Questions sur JS
 
 * Expliquez la délégation d'évènement.
+
+>Lorsqu'un événement est déclenché sur un élément, l'événement est remonté jusqu'à la racine du DOM.
+>
+>On peut ainsi utiliser la délégation d'événement pour prévoir des événements sur des éléments qui n'ont pas encore été créés (seront ajoutés via JS/Ajax), ou bien utiliser un seul eventListener pour toute une liste en le plaçant sur l'élément parent `ul`.
+>
+>Le code suivant permet de déléguer la gestion des événements `clic` sur les éléments ayant la classe CSS `elems2` sur l'élément dont l'identifiant est `elem1`.
+
+```javascript
+$('#elem1').on('click', '.elems2', callback);
+```
+
 * Expliquez comment fonctionne `this` en Javascript.
+
+>Contexte global : `this` fait référence à `window`.
+>
+>Contexte d'une fonction : soit contexte global (pas de use strict), soit contexte de la base (use strict).
+>
+>On peut cependant passer le contexte que l'on veut à une fonction avec `call` et `apply`. Attention à bien passer un objet, sinon `ToObject` sera appelé.
+>
+>On peut aussi utiliser `bind` pour lier un contexte de façon permanente à une fonction, ou des fonctions fléchées (où `this` aura **toujours** la valeur de l'objet englobant où la fonction est utilisée). 
+
 * Expliquez comment fonctionne l'héritage de prototype.
+
+>JavaScript n'utilise qu'un seul concept pour l'héritage : les objets.
+>Chaque objet possède un lien, interne, vers un autre objet, son prototype. Cet objet `prototype` possède lui aussi un prototype et ainsi de suite, jusqu'à ce que l'on aboutisse à un prototype `null`. `null` n'a, par définition, aucun prototype et forme donc le dernier maillon de la chaîne des prototypes.
+
 * Comment testez-vous votre code Javascript ?
 * Que pensez-vous d'AMD par rapport à CommonJS ?
 * Expliquez pourquoi ce qui suit n'est pas une IIFE (Immediately Invoked Function Expression) : `function foo(){ }();`.
   * Qu'est-ce qu'il faut changer pour faire une IIFE correcte ?
+
+>Avant le dernier set de parenthèses, le parseur détecte une déclaration, et non une expression. Mettre de parenthèses après cette déclaration ne la fait donc pas s'exécuter.
+>
+>Il faudrait donc écrire, par exemple (voir [Immediately-Invoked Function Expression (IIFE)](http://benalman.com/news/2010/11/immediately-invoked-function-expression/)) :
+
+```javascript
+(function foo(){ }());
+```
+
 * Quelle est la différence entre une variable `null`, `undefined` et non déclarée ?
   * Comment feriez-vous pour vérifier chacun de ces états ?
+
+>`null` est une valeur que l'on assigne volontairement à une variable, pour éviter de retourner `0` ou `""` par exemple, qui n'ont pas forcément de sens dans certains contextes.
+>
+>`undefined` est ce que renvoie une variable non-déclarée, ou bien lorsqu'elle est déclarée mais qu'aucune valeur ne lui a été assignée.
+>
+>On peut les tester de la manière suivante :
+
+```javascript
+if (foo === undefined) {
+// ...
+} else if (foo === null) {
+// ...
+}
+```
+
 * Qu'est-ce qu'une "closure" et comment/pourquoi en utiliser une ?
 * Quelle est l'utilisation typique d'une fonction anonyme ?
 * Comment organisez-vous votre code ? (pattern modulaire, héritage classique ?)
@@ -486,6 +593,9 @@ transparence totale via opacity:100%; ou RGBA(X,X,X,1);
 >The difference is that `.apply` lets you invoke the function with arguments as an array; `.call` requires the parameters be listed explicitly. A useful mnemonic is "A for array and C for comma".
 
 * Expliquez `Function.prototype.bind` ?
+
+>Permet de fixer un contexte donné en paramètre pour la fonction concernée. Peu importe comment elle est appelée, `this` aura toujours la même valeur donnée dans cette fonction.s
+
 * Comment optimisez-vous votre code ?
 * Pouvez-vous expliquer comment fonctionne l'héritage en Javascript ?
 * Quand utiliseriez-vous `document.write()` ?
@@ -786,3 +896,4 @@ bouton.addEventListener("click", function () {
 * [Amélioration progressive vs dégradation élégante](https://fr.wikipedia.org/wiki/Am%C3%A9lioration_progressive#Am.C3.A9lioration_progressive_vs_d.C3.A9gradation_.C3.A9l.C3.A9gante)
 * [Comprendre z-index et les contextes d'empilement](http://iamvdo.me/blog/comprendre-z-index-et-les-contextes-dempilement)
 * [Ecriture de CSS efficace](https://developer.mozilla.org/fr/docs/%C3%89criture_de_CSS_efficace)
+* [The CSS Box Model](http://www.w3schools.com/css/css_boxmodel.asp)

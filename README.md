@@ -801,7 +801,7 @@ for (let i = 1; i <= 100; i++) {
 >**1.** Expires = indique le moment après lequel la ressource devrait être considérée obsolète<br/>
 >Date = moment auquel le message est généré<br/>
 >Age = estimation de l'âge (par le receveur) de la requête depuis son renvoi par le serveur<br/>
->If-Modified = date envoyée au serveur, si page n'a pas été modifiée depuis la date donnée, le serveur renvoie 304. Sinon, renvoie 200 et page entière.
+>If-Modified-Since = date envoyée au serveur, si page n'a pas été modifiée depuis la date donnée, le serveur renvoie 304. Sinon, renvoie 200 et page entière.
 >
 >**2.** Do not track = permet de signaler aux applications web que l'utilisateur ne veut pas être "suivi"
 >
@@ -831,13 +831,46 @@ for (let i = 1; i <= 100; i++) {
 >DELETE : demande au serveur de supprimer une ressource
 
 * Quelle est la principale différence entre HTTP1 et HTTP1.1 ?
+
+>Par défaut, HTTP 1.1 utilise des connexions persistantes, autrement dit la connexion n'est pas immédiatement fermée après une requête, mais reste disponible pour une nouvelle requête. On appelle souvent cette fonctionnalité ***keep-alive***.
+>Il est aussi permis à un client HTTP d'envoyer plusieurs requêtes sur la même connexion sans attendre les réponses. On appelle cette fonctionnalité ***pipelining***.
+>La persistance des connexions permet d'accélérer le chargement de pages contenant plusieurs ressources, tout en diminuant la charge du réseau.
+>La gestion de la persistance d'une connexion est gérée par l'en-tête *Connection*.
+>
+>Sinon, meilleure gestion du cache, et l'entête Host devient obligatoire dans les requêtes.
+
 * Quelle est la principale différence entre HTTP1.1 et HTTP2 ?
+
+>Le multiplexage.
+
 * Qu'est ce que le multiplexage et expliquez sont fonctionnement ?
+
+>Le multiplexage est une technique qui consiste à faire passer plusieurs informations à travers un seul support de transmission. Elle permet de partager une même ressource entre plusieurs utilisateurs.
+>
+>Dans le cas du multiplexage temporel, le multiplexeur fonctionne comme un commutateur, chaque signal est commuté à tour de rôle à grande fréquence.
+>
+>Le multiplexage optique ne répartit pas les signaux dans le temps, mais dans un espace de fréquences.
+
 * Qu'est ce qu'un port ?
+
+>Analogie immeuble : l'IP est l'adresse de l'immeuble, le port est le nom de la personne destinataire sur la boîte aux lettres.
+
 * Combien il y t'il de port ? A quoi correspond ce nombre ?
-* Qui définie les ports par défaut ?
+
+>65535 = 2^16 - 1. Correspond aux 16 bits destinés à l'identification du port dans la trame de la couche OSI correspondant aux protocoles.
+
+* Qui définit les ports par défaut ?
+
+>[IANA](http://www.iana.org/)
+
 * Qu'est ce que NAT ?
+
+>Faire correspondre des adresses IP avec d'autres. Exemple : correspondance adresses locales et internet.
+>Ainsi, il est possible de faire correspondre une seule adresse externe publique visible sur Internet à toutes les adresses d'un réseau privé, afin de pallier l'épuisement des adresses IPv4.
+
 * Qu'est ce que le CORS ?
+
+>Cross-Origin Resource Sharing, pallie à la "same-origin policy" en permettant l'accès à des ressources (polices par ex) sur un domaine différent du domaine d'appel (utile pour les requêtes AJAX par ex).
 
 **[⬆ back to top](#toc)**
 
@@ -865,16 +898,70 @@ for (let i = 1; i <= 100; i++) {
 ## Questions sur les bases de données
 
 * Que signifie SQL ?
+
+>Structured Query Language
+
 * Expliquez la différence entre SQL et noSQL ?
+
+>SQL est structuré, noSQL non (pas de BDD relationnelles, uniquement des objets organisés style JSON).
+
 * Quels sont les avantages du SQL par rapport à du noSQL ?
+
+>Organisation nette, claire. Relation entre tables (clés étrangères) -> moins de redondances. Possibilité de faire des jointures. Meilleure intégrité des données (on ne peut pas faire n'importe quoi, il faut respecter les schémas, les types de données...).
+
 * Quels sont les avantages du noSQL par rapport à du SQL ?
+
+>On peut ajouter des données n'importe où, à n'importe quel moment, sans devoir construire de schéma de données. On peut ainsi commencer facilement sur un projet où il serait difficile voire impossible de définir un schéma relationnel dès le départ.
+>
+>Si utilisation de noSQL dénormalisé, on peut stocker toutes les infos dans un seul objet -> pas de jointures à faire, plus rapide.
+
 * Expliquez ce que sont les procédures stockées ?
+
+>Série d'instructions SQL désignée par un nom. Lorsque l'on crée une procédure stockée, on l'enregistre dans la base de données que l'on utilise, au même titre qu'une table par exemple. Une fois la procédure créée, il est possible d'appeler celle-ci, par son nom.
+>Les instructions de la procédure sont alors exécutées.
+>Contrairement aux requêtes préparées, qui ne sont gardées en mémoire que pour la session courante, les procédures stockées sont, comme leur nom l'indique, stockées de manière durable, et font bien partie intégrante de la base de données dans laquelle elles sont enregistrées.
+
 * Expliquez ce qu'est un trigger ?
+
+>Tout comme les procédures stockées, les triggers servent à exécuter une ou plusieurs instructions. Mais à la différence des procédures, il n'est pas possible d'appeler un trigger : un trigger doit être déclenché par un événement.
+>
+>Un trigger est attaché à une table, et peut être déclenché par :
+>
+>- une insertion dans la table (`INSERT`) ;
+>- la suppression d'une partie des données de la table (`DELETE`) ;
+>- la modification d'une partie des données de la table (`UPDATE`).
+>
+>Par ailleurs, une fois le trigger déclenché, ses instructions peuvent être exécutées soit juste avant l'exécution de l'événement déclencheur, soit juste après.
+
 * Expliquez ce qu'est un index ?
+
+>C'est un field qui subit souvent des queries et qui est donc indexé pour accélérer la recherche.
+
 * Expliquez la différence entre index PRIMARY, UNIQUE, INDEX ?
+
+>Things that are the same:
+>
+>- A primary key implies a unique index.
+>
+>Things that are different:
+>
+>- A primary key also implies NOT NULL, but a unique index can be nullable.
+>- There can be only one primary key, but there can be multiple unique indexes.
+>- If there is no clustered index defined then the primary key will be the clustered index.
+
 * Listez autant de type d'index que vous connaissez.
+
+>Unique, (non-)ordonné en clusters, filtré, spatial, XML
+
 * Expliquez ce qu'est une constraints  ?
+
+>SQL constraints are used to specify rules for the data in a table. If there is any violation between the constraint and the data action, the action is aborted by the constraint.
+>
+>Exemples : NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, DEFAULT
+
 * Expliquez ce qu'est l'injection SQL.
+
+>Groupe de méthodes d'exploitation de faille de sécurité d'une application interagissant avec une base de données. Elle permet d'injecter dans la requête SQL en cours un morceau de requête non prévu par le système et pouvant en compromettre la sécurité.
 
 **[⬆ back to top](#toc)**
 

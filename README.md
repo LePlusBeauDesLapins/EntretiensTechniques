@@ -739,7 +739,7 @@ for (let i = 1; i <= 100; i++) {
 
 * Avez-vous expérimenté le Javascript ECMA 6 ?
 
->Let, const, arrow functions, promise, classes...
+>Let, const, arrow functions, promise, classes, spread operator, rest parameters...
 
 * Quelle est la principale différence entre les arrows fonctions et les fonctions anonymes ?
 
